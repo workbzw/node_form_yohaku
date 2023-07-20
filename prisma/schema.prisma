@@ -1,0 +1,108 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model b_goods {
+  id             BigInt    @id @default(autoincrement())
+  view_id        String    @unique(map: "uniq_view_id") @db.VarChar(18)
+  name           String    @default("") @db.VarChar(64)
+  img_url        String    @default("") @db.VarChar(256)
+  remark         String    @default("") @db.VarChar(32)
+  type           Int?      @default(1) @db.SmallInt
+  original_price Decimal   @default(0.000000000) @db.Decimal(19, 9)
+  purchase_price Decimal   @default(0.000000000) @db.Decimal(19, 9)
+  object_id      BigInt    @default(0)
+  status         Int?      @default(1) @db.SmallInt
+  create_time    DateTime? @default(now()) @db.DateTime(0)
+  update_time    DateTime? @default(now()) @db.DateTime(0)
+}
+
+model b_goods_condition {
+  id          BigInt    @id @default(autoincrement())
+  view_id     String    @unique(map: "uniq_view_id") @db.VarChar(18)
+  name        String    @default("") @db.VarChar(64)
+  goods_id    BigInt    @default(0)
+  condition   BigInt    @default(0)
+  remark      String    @default("") @db.VarChar(32)
+  status      Int?      @default(1) @db.SmallInt
+  create_time DateTime? @default(now()) @db.DateTime(0)
+  update_time DateTime? @default(now()) @db.DateTime(0)
+}
+
+model b_order {
+  id          BigInt    @id @default(autoincrement())
+  view_id     String    @unique(map: "uniq_view_id") @db.VarChar(18)
+  user_id     BigInt    @default(0)
+  goods_id    BigInt    @default(0)
+  remark      String    @default("") @db.VarChar(32)
+  type        Int?      @default(1) @db.SmallInt
+  status      Int?      @default(1) @db.SmallInt
+  create_time DateTime? @default(now()) @db.DateTime(0)
+  update_time DateTime? @default(now()) @db.DateTime(0)
+  amount      Decimal   @default(0.000000000) @db.Decimal(19, 9)
+  amount_type Int?      @default(1) @db.SmallInt
+  amount_unit String    @default("") @db.VarChar(32)
+}
+
+model b_pattern {
+  id          BigInt    @id @default(autoincrement())
+  view_id     String    @unique(map: "uniq_view_id") @db.VarChar(18)
+  img_url     String    @default("") @db.VarChar(256)
+  remark      String    @default("") @db.VarChar(32)
+  status      Int?      @default(1) @db.SmallInt
+  create_time DateTime? @default(now()) @db.DateTime(0)
+  update_time DateTime? @default(now()) @db.DateTime(0)
+}
+
+model b_promo_info_collection {
+  id          BigInt    @id @default(autoincrement())
+  source      String    @default("") @db.VarChar(16)
+  vip_code    String    @default("") @db.VarChar(32)
+  name        String    @default("") @db.VarChar(32)
+  email       String    @default("") @db.VarChar(64)
+  remark      String    @default("") @db.VarChar(64)
+  status      Int?      @default(1) @db.SmallInt
+  create_time DateTime? @default(now()) @db.DateTime(0)
+  update_time DateTime? @default(now()) @db.DateTime(0)
+}
+
+model s_user {
+  id           BigInt    @id @default(autoincrement())
+  view_id      String    @unique(map: "uniq_view_id") @db.VarChar(18)
+  first_name   String    @default("") @db.VarChar(16)
+  end_name     String    @default("") @db.VarChar(16)
+  pattern      BigInt
+  email        String    @unique(map: "uniq_email") @default("") @db.VarChar(32)
+  token        String    @default("") @db.VarChar(16)
+  remark       String    @default("") @db.VarChar(32)
+  status       Int?      @default(1) @db.SmallInt
+  create_time  DateTime? @default(now()) @db.DateTime(0)
+  update_time  DateTime? @default(now()) @db.DateTime(0)
+  payment_step Int?      @default(0) @db.SmallInt
+}
+
+/// This model or at least one of its fields has comments in the database, and requires an additional setup for migrations: Read more: https://pris.ly/d/database-comments
+model s_user_login_access_code {
+  id           BigInt    @id @default(autoincrement())
+  user_view_id String    @unique(map: "uniq_view_id") @db.VarChar(18)
+  access_code  String    @unique(map: "uniq_account") @db.VarChar(32)
+  status       Int?      @default(1) @db.SmallInt
+  create_time  DateTime? @default(now()) @db.DateTime(0)
+  update_time  DateTime? @default(now()) @db.DateTime(0)
+}
+
+model s_user_login_account {
+  id           BigInt    @id @default(autoincrement())
+  user_view_id String    @unique(map: "uniq_view_id") @db.VarChar(18)
+  account      String    @unique(map: "uniq_account") @db.VarChar(32)
+  password     String    @db.VarChar(16)
+  status       Int?      @default(1) @db.SmallInt
+  create_time  DateTime? @default(now()) @db.DateTime(0)
+  update_time  DateTime? @default(now()) @db.DateTime(0)
+}
